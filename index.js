@@ -2,6 +2,7 @@ const startButton = document.querySelector(".start-button");
 const stopButton = document.querySelector(".stop-button");
 const markButton = document.querySelector(".mark-attendance");
 const cameraPreview = document.querySelector(".camera-preview");
+const downloadContainer = document.querySelector(".download-link-container");
 
 let stream = null;
 let videoElement = null;
@@ -42,11 +43,43 @@ stopButton.addEventListener("click", () => {
   }
   cameraPreview.innerHTML = "camera preview";
   videoElement = null;
+  downloadContainer.innerHTML = "";
 });
 
 markButton.addEventListener("click", () => {
-  if (stream) {
-    alert("Attendance marked successfully!");
+  if (videoElement && stream) {
+    const canvas = document.createElement("canvas");
+    canvas.width = videoElement.videoWidth;
+    canvas.height = videoElement.videoHeight;
+
+    const context = canvas.getContext("2d");
+    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          const blobUrl = URL.createObjectURL(blob);
+          console.log("Blob URL:", blobUrl);
+          const a = document.createElement("a");
+          a.href = blobUrl;
+          a.download = `captured-image-${Date.now()}.jpg`;
+          a.textContent = "Download captured image";
+          a.style.color = "white";
+          a.style.fontSize = "1rem";
+          a.style.display = "inline-block";
+          a.style.marginTop = "1rem";
+
+          downloadContainer.innerHTML = "";
+          downloadContainer.appendChild(a);
+
+          alert("Image captured and ready to download!");
+        } else {
+          alert("Failed to capture image.");
+        }
+      },
+      "image/jpeg",
+      0.95
+    );
   } else {
     alert("Please start the camera before marking attendance.");
   }
