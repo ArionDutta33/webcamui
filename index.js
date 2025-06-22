@@ -84,3 +84,61 @@ markButton.addEventListener("click", () => {
     alert("Please start the camera before marking attendance.");
   }
 });
+
+// s3 code
+//requires basic backend
+// import AWS from "aws-sdk";
+
+// AWS.config.update({
+//   region: "your-region", // e.g. 'ap-south-1'
+//   credentials: new AWS.CognitoIdentityCredentials({
+//     IdentityPoolId: "your-identity-pool-id",
+//   }),
+// });
+
+// markButton.addEventListener("click", async () => {
+//   if (videoElement && stream) {
+//     const canvas = document.createElement("canvas");
+//     canvas.width = videoElement.videoWidth;
+//     canvas.height = videoElement.videoHeight;
+
+//     const context = canvas.getContext("2d");
+//     context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+//     canvas.toBlob(
+//       async (blob) => {
+//         if (blob) {
+//           try {
+//             const s3 = new AWS.S3();
+//             const fileName = `attendance-${Date.now()}.jpg`;
+
+//             const params = {
+//               Bucket: "YOUR_BUCKET_NAME",
+//               Key: fileName,
+//               Body: blob,
+//               ContentType: "image/jpeg",
+//             };
+
+//             s3.upload(params, (err, data) => {
+//               if (err) {
+//                 console.error("Upload Error:", err);
+//                 alert("Upload failed");
+//               } else {
+//                 console.log("Successfully uploaded:", data.Location);
+//                 alert("Image uploaded to S3!");
+//               }
+//             });
+//           } catch (err) {
+//             console.error("Error:", err);
+//           }
+//         } else {
+//           alert("Failed to capture image.");
+//         }
+//       },
+//       "image/jpeg",
+//       0.95
+//     );
+//   } else {
+//     alert("Please start the camera before marking attendance.");
+//   }
+// });
